@@ -1,1 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escáner - Cena Baile Técnica 25</title>
 
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+      background: #f5f1ea;
+      color: #333;
+    }
+
+    h1 {
+      margin-bottom: 5px;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: 18px;
+      font-weight: normal;
+    }
+
+    #reader {
+      max-width: 500px;
+      margin: 25px auto;
+      background: white;
+      padding: 10px;
+      border-radius: 15px;
+    }
+
+    .mensaje {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .nota {
+      margin-top: 20px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>🎟️ Control de Acceso</h1>
+  <h2>Cena Baile • Técnica 25</h2>
+
+  <p>Apunta la cámara al código QR del boleto.</p>
+
+  <div id="reader"></div>
+
+  <div id="resultado" class="mensaje"></div>
+
+  <div class="nota">
+    Cada boleto puede utilizarse una sola vez.
+  </div>
+
+  <script>
+
+    const APP_URL =
+      "https://script.google.com/macros/s/AKfycbys9XPeHIDmAv8K9nPWcZdIAkcNEC2IHgQypxteyRJxSkxhQs5owXpPfp9gVuthEXw/exec";
+
+    let procesando = false;
+
+    function codigoEscaneado(codigo) {
+
+      if (procesando) return;
+
+      procesando = true;
+
+      codigo = codigo.trim();
+
+      document.getElementById("resultado").innerHTML =
+        "⏳ Verificando boleto...";
+
+      setTimeout(function() {
+
+        window.location.href =
+          APP_URL + "?codigo=" + encodeURIComponent(codigo);
+
+      }, 500);
+    }
+
+    function errorEscaneo(error) {
+      // No mostramos los errores normales mientras busca el QR.
+    }
+
+    const scanner = new Html5QrcodeScanner(
+      "reader",
+      {
+        fps: 10,
+        qrbox: {
+          width: 250,
+          height: 250
+        }
+      },
+      false
+    );
+
+    scanner.render(codigoEscaneado, errorEscaneo);
+
+  </script>
+
+</body>
+</html>
